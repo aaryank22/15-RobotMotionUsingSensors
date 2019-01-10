@@ -4,7 +4,7 @@ wait-until-event pattern, in the context of robot motion that uses sensors.
 
 Authors: David Mutchler, Vibha Alangar, Matt Boutell, Dave Fisher,
          Mark Hays, Amanda Stouder, Aaron Wilkin, their colleagues,
-         and PUT_YOUR_NAME_HERE.
+         and Aaryan Khatri.
 """  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import ev3dev.ev3 as ev3
@@ -51,6 +51,14 @@ def wait_for_seconds():
     #   NOTE: this function has nothing to do with robots,
     #   but its concepts will be useful in the forthcoming robot exercises.
     # -------------------------------------------------------------------------
+    print('Hello')
+    start = time.time()
+    while True:
+        current = time.time()
+        if current - start >= 3:
+            break
+
+    print('Goodbye')
 
 
 def run_test_init():
@@ -63,6 +71,7 @@ def run_test_init():
     # TODO: 3. Implement this function, then implement the   __init__   method
     #   of the SimpleRoseBot class, then use this function to test __init__.
     # -------------------------------------------------------------------------
+    SimpleRoseBot()
 
 
 def run_test_go_and_stop():
@@ -76,7 +85,10 @@ def run_test_go_and_stop():
     #   methods of the SimpleRoseBot class, then use this function
     #   to test both   go   and   stop   at the same time.
     # -------------------------------------------------------------------------
-
+    robot = SimpleRoseBot()
+    robot.go(100, 40)
+    time.sleep(3)
+    robot.stop()
 
 def run_test_go_straight_for_seconds():
     """ Tests the   go_straight_for_seconds   method of SimpleRoseBot. """
@@ -122,7 +134,30 @@ def run_test_go_straight_until_black():
 # Your instructor may help you get started.
 ###############################################################################
 
+class SimpleRoseBot(object):
 
+    def __init__(self):
+        self.left_wheel_motor = Motor('B')
+        self.right_wheel_motor = Motor('C')
+        self.color_sensor = ColorSensor(3)
+
+    def go(self, left_wheel_speed, right_wheel_speed):
+        self.left_wheel_motor.turn_on(left_wheel_speed)
+        self.right_wheel_motor.turn_on(right_wheel_speed)
+
+    def stop(self):
+        self.left_wheel_motor.turn_off()
+        self.right_wheel_motor.turn_off()
+
+    def go_straight_for_seconds(self, seconds, speed):
+        self.go(speed, speed)
+        start = time.time()
+        while True:
+            current = time.time()
+            if current - start >= seconds:
+                break
+
+        self.stop()
 ###############################################################################
 # The  Motor   and   ColorSensor classes.  USE them, but do NOT modify them.
 ###############################################################################
